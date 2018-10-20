@@ -1,0 +1,66 @@
+Sub run_all_worksheets()
+
+Sheets("2016").Activate
+Call stock_volumes
+
+Sheets("2015").Activate
+Call stock_volumes
+
+Sheets("2014").Activate
+Call stock_volumes
+
+End Sub
+
+Sub stock_volumes()
+
+  ' Set an initial variable for holding the _stock_ name
+  Dim Stock_Symbol As String
+
+  ' Set an initial variable for holding the total per Stock Ticker
+  Dim Stock_Total As Double
+  Stock_Total = 0
+
+  ' Keep track of the location for each Stock Ticker in the summary table
+  Dim Summary_Table_Row As Integer
+  Summary_Table_Row = 2
+
+  Dim RowCount As Long
+  RowCount = Cells(Rows.Count, 1).End(xlUp).Row
+  
+  ' Loop through all credit card purchases
+  For i = 2 To RowCount
+
+    ' Check if we are still within the same Stock Ticker, if it is not...
+    If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+
+      ' Set the _stock_ name
+      Stock_Symbol = Cells(i, 1).Value
+
+      ' Add to the _stock_ Total
+      Stock_Total = Stock_Total + Cells(i, 7).Value
+
+      ' Print the Stock Ticker in the Summary Table
+      Range("J" & Summary_Table_Row).Value = Stock_Symbol
+
+      ' Print the _stock_ Amount to the Summary Table
+      Range("K" & Summary_Table_Row).Value = Stock_Total
+
+      ' Add one to the summary table row
+      Summary_Table_Row = Summary_Table_Row + 1
+      
+      ' Reset the _stock_ Total
+      Stock_Total = 0
+
+    ' If the cell immediately following a row is the same _stock_...
+    Else
+
+      ' Add to the _stock_ Total
+      Stock_Total = Stock_Total + Cells(i, 7).Value
+
+    End If
+
+  Next i
+  
+End Sub
+
+
